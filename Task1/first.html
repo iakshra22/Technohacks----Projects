@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ultimate Quiz App</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas id="confetti"></canvas>
+    <div class="app" role="application">
+      <header>
+        <h1>🧠 Quiz App</h1>
+        <div class="top-right small-muted">Theme: Elegant • Black / Grey / White</div>
+      </header>
+      
+      <section id="start" class="panel active">
+        <div class="center-col card">
+          <h2 style="margin-bottom:6px">Welcome — Ready to test yourself?</h2>
+          <input id="name" type="text" placeholder="Enter your name" aria-label="name" />
+          <select id="difficulty" aria-label="difficulty">
+            <option value="easy">Easy (12 questions)</option>
+            <option value="medium">Medium (8 questions)</option>
+            <option value="hard">Hard (6 questions)</option>
+          </select>
+          <div style="display:flex;gap:10px;margin-top:6px">
+            <button id="startBtn" class="btn">Start Quiz</button>
+            <button id="howBtn" class="next">How to play</button>
+          </div>
+          <p class="small-muted" style="margin-top:8px">Choose difficulty and press Start. Timer per question varies by difficulty.</p>
+        </div>
+      </section>
+
+      <!-- Quiz -->
+      <section id="quiz" class="panel" aria-hidden="true">
+        <div class="meta">
+          <div id="qcount">Question 1 / 12</div>
+          <div id="timer" class="small-muted">Time: <strong id="tvalue">10</strong>s</div>
+        </div>
+
+        <div class="progress"><i id="progressBar"></i></div>
+
+        <div class="card" style="margin-top:14px">
+          <h2 id="question" class="question">Question will appear here</h2>
+          <div id="answers" class="answers" role="list"></div>
+
+          <div class="controls">
+            <div class="small-muted" id="feedback">&nbsp;</div>
+            <div>
+              <button id="nextBtn" class="next hide">Next</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Result -->
+      <section id="result" class="panel" aria-hidden="true">
+        <div class="card">
+          <h2>Quiz Completed</h2>
+          <div id="scoreBlock">
+            <div class="result-score" id="scoreText">You scored 0 / 0</div>
+            <div class="feedback" id="finalFeedback">Good try!</div>
+          </div>
+
+          <div class="leader">
+            <h3>Leaderboard</h3>
+            <ul id="leaderboardList"></ul>
+          </div>
+
+          <div style="display:flex;gap:10px;justify-content:center;margin-top:12px">
+            <button id="restartBtn" class="btn">Play Again</button>
+            <button id="backBtn" class="next">Back to Home</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
