@@ -1,4 +1,3 @@
-// ---------- Configuration & Data (easy/medium/hard counts & question banks) ----------
 const BANK = {
   easy: [
     {q:"HTML stands for?", a:["Hyper Text Markup Language","HighText Machine Language","Hyperlink Markup Language","Hyper Text Multiple Language"], correct:0},
@@ -37,7 +36,7 @@ const BANK = {
 const DIFFICULTY_COUNTS = { easy:12, medium:8, hard:6 };
 const DIFFICULTY_TIME = { easy:15, medium:12, hard:10 };
 
-// ---------- State ----------
+
 let state = {
   name:'',
   difficulty:'easy',
@@ -49,7 +48,6 @@ let state = {
   confettiTimer:null
 };
 
-// ---------- Elements ----------
 const startPanel = document.getElementById('start');
 const quizPanel = document.getElementById('quiz');
 const resultPanel = document.getElementById('result');
@@ -70,7 +68,7 @@ const leaderboardList = document.getElementById('leaderboardList');
 const restartBtn = document.getElementById('restartBtn');
 const backBtn = document.getElementById('backBtn');
 
-// Confetti canvas
+
 const confettiCanvas = document.getElementById('confetti');
 const ctx = confettiCanvas.getContext('2d');
 let confettiPieces = [];
@@ -79,7 +77,6 @@ function resizeCanvas(){confettiCanvas.width = window.innerWidth;confettiCanvas.
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-// ---------- Helpers ----------
 function show(panel){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));panel.classList.add('active')}
 function shuffle(a){return a.slice().sort(()=>Math.random()-0.5)}
 function pickQuestions(bank, count){
@@ -87,17 +84,16 @@ function pickQuestions(bank, count){
   return pool.slice(0, Math.min(count,pool.length));
 }
 
-// ---------- Quiz flow ----------
 startBtn.addEventListener('click', ()=>{
   const name = nameInput.value.trim();
   if(!name){alert('Please enter your name');nameInput.focus();return}
   state.name = name;state.difficulty = diffSelect.value;
-  // build question set according to chosen difficulty and required count
+ 
   const needed = DIFFICULTY_COUNTS[state.difficulty];
-  // combine banks (use only the chosen difficulty bank; counts match banks above)
+
   const bank = BANK[state.difficulty] || [];
   state.questions = pickQuestions(bank, needed).map(q=>({...q}));
-  // shuffle answer options for each question while keeping track of correct index
+
   state.questions.forEach(q=>{
     const pairs = q.a.map((text,idx)=>({text,idx}));
     const shuffled = shuffle(pairs);
@@ -105,7 +101,7 @@ startBtn.addEventListener('click', ()=>{
     q.correct = shuffled.findIndex(s=>s.idx===q.correct);
   });
   state.index = 0;state.score = 0;
-  // set time per question
+  
   state.timeLeft = DIFFICULTY_TIME[state.difficulty] || 10;
   show(quizPanel);
   renderQuestion();
@@ -116,7 +112,7 @@ howBtn.addEventListener('click', ()=>{
 });
 
 nextBtn.addEventListener('click', ()=>{
-  // advance
+
   state.index++;
   if(state.index < state.questions.length){
     renderQuestion();
@@ -126,7 +122,7 @@ nextBtn.addEventListener('click', ()=>{
 });
 
 restartBtn.addEventListener('click', ()=>{
-  // restart with same difficulty & name
+
   state.index = 0;state.score = 0;
   state.questions = pickQuestions(BANK[state.difficulty], DIFFICULTY_COUNTS[state.difficulty]).map(q=>({...q}));
   state.questions.forEach(q=>{const pairs=q.a.map((t,i)=>({t,i}));const s=shuffle(pairs);q.a=s.map(x=>x.t);q.correct=s.findIndex(x=>x.i===q.correct)});
@@ -135,23 +131,23 @@ restartBtn.addEventListener('click', ()=>{
 
 backBtn.addEventListener('click', ()=>{show(startPanel)});
 
-// ---------- Render question ----------
+
 function renderQuestion(){
   clearTimers();
   const cur = state.questions[state.index];
   qcount.textContent = `Question ${state.index+1} / ${state.questions.length}`;
   questionEl.textContent = cur.q;
-  // answers
+
   answersEl.innerHTML = '';
   cur.a.forEach((ans,i)=>{
     const btn = document.createElement('button');btn.className='answer';btn.setAttribute('role','listitem');btn.textContent=ans;
     btn.addEventListener('click', ()=>onAnswer(btn,i));answersEl.appendChild(btn);
   });
-  // reset UI
+
   feedbackEl.textContent='';nextBtn.classList.add('hide');nextBtn.classList.remove('show');
-  // progress
+
   const prog = ((state.index)/state.questions.length)*100;document.getElementById('progressBar').style.width = prog+'%';
-  // timer
+
   state.timeLeft = DIFFICULTY_TIME[state.difficulty] || 10;updateTimerDisplay();
   state.timer = setInterval(()=>{
     state.timeLeft--;updateTimerDisplay();
@@ -162,18 +158,18 @@ function renderQuestion(){
 function updateTimerDisplay(){tvalue.textContent = state.timeLeft}
 
 function onAnswer(button, chosenIndex){
-  // prevent multiple clicks
+
   lockAnswers();
   clearInterval(state.timer);
   const cur = state.questions[state.index];
   const correctIndex = cur.correct;
-  // mark answers
+  
   Array.from(answersEl.children).forEach((btn,idx)=>{
     btn.disabled = true;btn.classList.remove('correct','wrong');
     if(idx===correctIndex) btn.classList.add('correct');
     if(idx===chosenIndex && idx!==correctIndex) btn.classList.add('wrong');
   });
-  // update score
+  
   if(chosenIndex===correctIndex) { state.score++; feedbackEl.textContent='Correct ✅' }
   else { feedbackEl.textContent='Wrong ❌' }
   nextBtn.classList.remove('hide');nextBtn.classList.add('show');
@@ -183,9 +179,8 @@ function lockAnswers(){Array.from(answersEl.children).forEach(b=>{b.disabled=tru
 
 function clearTimers(){ if(state.timer){clearInterval(state.timer);state.timer=null} if(state.confettiTimer){clearInterval(state.confettiTimer);state.confettiTimer=null;clearConfetti()} }
 
-// ---------- End quiz ----------
 function endQuiz(){ clearTimers(); show(resultPanel);
-  // final progress full
+ 
   document.getElementById('progressBar').style.width = '100%';
   scoreText.textContent = `${state.name}, your score: ${state.score} / ${state.questions.length}`;
   const pct = Math.round((state.score/state.questions.length)*100);
@@ -194,11 +189,9 @@ function endQuiz(){ clearTimers(); show(resultPanel);
   else finalFeedback.textContent = '💪 Keep practising!';
   saveLeaderboard({name:state.name,score:pct});
   renderLeaderboard();
-  // confetti for good scores
   if(pct>=50) startConfetti();
 }
 
-// ---------- Leaderboard (localStorage) ----------
 function saveLeaderboard(entry){
   const raw = localStorage.getItem('quiz_leaderboard_v1');
   const list = raw?JSON.parse(raw):[];
@@ -215,9 +208,7 @@ function renderLeaderboard(){
   });
 }
 
-// ---------- Confetti implementation ----------
 function startConfetti(){
-  // create pieces
   confettiPieces = [];
   const count = Math.min(250, Math.max(60, state.questions.length * 20));
   for(let i=0;i<count;i++){
@@ -227,7 +218,7 @@ function startConfetti(){
   state.confettiTimer = setInterval(()=>{
     drawConfetti();
   },20);
-  // stop after some seconds
+
   setTimeout(()=>{ if(state.confettiTimer){clearInterval(state.confettiTimer);state.confettiTimer=null;clearConfetti()} },4500);
 }
 function drawConfetti(){
@@ -240,5 +231,5 @@ function drawConfetti(){
 }
 function clearConfetti(){ ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height); confettiPieces=[] }
 
-// ---------- Init ----------
 (function init(){ renderLeaderboard(); show(startPanel); })();
+
