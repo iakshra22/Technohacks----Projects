@@ -234,3 +234,4 @@ function clearConfetti(){ ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.
 (function init(){ renderLeaderboard(); show(startPanel); })();
 
 
+
