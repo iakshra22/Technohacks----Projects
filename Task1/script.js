@@ -1,4 +1,4 @@
-const BANK = {
+const BANK = 
   easy: [
     {q:"HTML stands for?", a:["Hyper Text Markup Language","HighText Machine Language","Hyperlink Markup Language","Hyper Text Multiple Language"], correct:0},
     {q:"Which tag makes a line break?", a:["<br>","<lb>","<break>","<newline>"], correct:0},
@@ -232,6 +232,7 @@ function drawConfetti(){
 function clearConfetti(){ ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height); confettiPieces=[] }
 
 (function init(){ renderLeaderboard(); show(startPanel); })();
+
 
 
 
