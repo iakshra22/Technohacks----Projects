@@ -9,7 +9,7 @@ const BANK =
     {q:"Which tag creates ordered list?", a:["<ol>","<ul>","<li>","<dl>"], correct:0},
     {q:"Which tag is for table row?", a:["<tr>","<td>","<th>","<table>"], correct:0},
     {q:"Which input type hides characters?", a:["password","text","email","hidden"], correct:0},
-    {q:"Which attribute provides alternative text for images?", a:["alt","title","desc","label"], correct:0}
+    {q:"Which attribute provides alternative text for images?", a:["alt","title","desc","label"], correct:0},
     {q:"Which tag is used to include JavaScript?", a:["<script>","<js>","<code>","<link>"], correct:0},
     {q:"Which tag groups content as a paragraph?", a:["<p>","<div>","<span>","<section>"], correct:0}
   ],
@@ -232,6 +232,7 @@ function drawConfetti(){
 function clearConfetti(){ ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height); confettiPieces=[] }
 
 (function init(){ renderLeaderboard(); show(startPanel); })();
+
 
 
 
